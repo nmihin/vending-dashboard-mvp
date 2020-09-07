@@ -1,0 +1,13 @@
+<mat-toolbar color="primary" *ngIf="currentUser">
+        <img class="logo" src="assets/logo_smarpay_swiss.svg" />
+        <button mat-button [routerLinkActive]="['active']" [routerLink]="'/home'">
+          Payment Data
+        </button>
+        <button mat-button [routerLinkActive]="['active']" [routerLink]="'/areas'">
+          Machines Data
+        </button>
+        <button class="logout" mat-button (click)="logout()">
+          Logout
+        </button>
+</mat-toolbar>
+<router-outlet></router-outlet>

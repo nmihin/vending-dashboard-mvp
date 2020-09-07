@@ -1,0 +1,194 @@
+diff a/src/app/sections/section-home/section-home.component.ts b/src/app/sections/section-home/section-home.component.ts	(rejected hunks)
+@@ -279,7 +279,6 @@
+     }
+   ];
+ 
+-
+   public seriesTwintSMS = [
+     {
+       name : "SMS",
+@@ -318,6 +317,11 @@
+ 
+   filterByMonth;
+ 
++  // GLOBAL FUNCTIONS
++  // CONVERT DD.MM.YYYY to YYYY,DD,MM
++  DDMMYYYtoYYYYDDMMconvert = (date) => {
++    return (date.slice(6, 10) + ',' + date.slice(3, 5) + ',' + date.slice(0, 2));
++  }
+ 
+   // Convert YYYY-DD-MM to timestamp
+   convertYYYYDDMMtoTimestamp = (date) => {
+@@ -366,24 +370,18 @@
+ 
+     // REFACTOR START - DRY
+     this.vendingDataMonthsSelect = this.storageValues.filter((ele)=>{
+-      // Convert DD.MM.YYYY to YYYY-DD-MM
+-      //this.dateFromVendingDataMonths = moment(ele.Date).format('YYYY-DD-MM');
+-      this.dateFromVendingDataMonths = ele.Date.slice(6, 10) + ',' + ele.Date.slice(3, 5) + ',' + ele.Date.slice(0, 2);
++      this.dateFromVendingDataMonths = this.DDMMYYYtoYYYYDDMMconvert(ele.Date);
+       return ((this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) > this.startDateRange) && (this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) <= this.endDateRange));
+     });
+ 
+     this.smsDataMonthsSelect = this.storageValuesSMS.filter((ele)=>{
+-      // Convert DD.MM.YYYY to YYYY-DD-MM
+-      //this.dateFromVendingDataMonths = moment(ele.Date).format('YYYY-DD-MM');
+-      this.dateFromVendingDataMonths = ele.Date.slice(6, 10) + ',' + ele.Date.slice(3, 5) + ',' + ele.Date.slice(0, 2);
++      this.dateFromVendingDataMonths = this.DDMMYYYtoYYYYDDMMconvert(ele.Date);
+       if((this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) > this.startDateRange) && (this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) <= this.endDateRange))
+       return ((this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) > this.startDateRange) && (this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) <= this.endDateRange));
+     });
+ 
+     this.twintDataMonthsSelect = this.storageValuesTwint.filter((ele)=>{
+-      // Convert DD.MM.YYYY to YYYY-DD-MM
+-      //this.dateFromVendingDataMonths = moment(ele.Date).format('YYYY-DD-MM');
+-      this.dateFromVendingDataMonths = ele.Date.slice(6, 10) + ',' + ele.Date.slice(3, 5) + ',' + ele.Date.slice(0, 2);
++      this.dateFromVendingDataMonths = this.DDMMYYYtoYYYYDDMMconvert(ele.Date);
+       return ((this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) > this.startDateRange) && (this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) <= this.endDateRange));
+     });
+     // REFACTOR END - DRY
+@@ -874,12 +869,12 @@
+     ]
+     this.seriesTwintSMSWeeks = []
+ 
+-    let startDateRangeFrom = this.convertYYYYDDMMtoTimestamp(from.slice(6, 10) + ',' + from.slice(3, 5) + ',' + from.slice(0, 2));
+-    let endDateRangeTo = this.convertYYYYDDMMtoTimestamp(to.slice(6, 10) + ',' + to.slice(3, 5) + ',' + to.slice(0, 2));
++    let startDateRangeFrom = this.convertYYYYDDMMtoTimestamp(this.DDMMYYYtoYYYYDDMMconvert(from));
++    let endDateRangeTo = this.convertYYYYDDMMtoTimestamp(this.DDMMYYYtoYYYYDDMMconvert(to));
+ 
+     this.filterResults = this.vendingDataMonthsSelect.filter(ele => {
+-      // REFACTOR START - DRY
+-      this.dateFromVendingDataMonths = ele.Date.slice(6, 10) + ',' + ele.Date.slice(3, 5) + ',' + ele.Date.slice(0, 2);
++      this.dateFromVendingDataMonths = this.DDMMYYYtoYYYYDDMMconvert(ele.Date);
++
+       return ((this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) > startDateRangeFrom) && (this.convertYYYYDDMMtoTimestamp(this.dateFromVendingDataMonths) <= endDateRangeTo));
+     });
+ 
+@@ -1026,16 +1021,12 @@
+       //console.log(this.uniqueValuesAmountByDayPaymentMethod);
+ 
+       // LINE CHARTS START - Amount By Operator (CHF) Daily
+-      let convertDDMMYYYYtoYYYYDDMM = (date) => {
+-        let tempDate = date.slice(6, 10) + ',' + date.slice(3, 5) + ',' + date.slice(0, 2);
+-        return (new Date(tempDate)).getTime();
+-     }
+-
+      let tempArr = [];
+ 
+       if (element.Operator == 'Salt' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-          if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+             this.lineChartAmount[0].series.push({
+               name: element.Date,
+               value: Number(element.Price) * Number(element.Count)
+@@ -1051,7 +1042,8 @@
+       }
+       if (element.Operator == 'Sunrise' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-          if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+             this.lineChartAmount[1].series.push({
+               name: element.Date,
+               value: Number(element.Price) * Number(element.Count)
+@@ -1067,7 +1059,8 @@
+       }
+       if (element.Operator == 'Swisscom' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-          if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+             this.lineChartAmount[2].series.push({
+               name: element.Date,
+               value: Number(element.Price) * Number(element.Count)
+@@ -1083,7 +1076,8 @@
+       }
+       if (element.Operator == 'Twint' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-            if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+               this.lineChartAmount[3].series.push({
+                 name: element.Date,
+                 value: Number(element.Price) * Number(element.Count)
+@@ -1100,7 +1094,8 @@
+       // LINE CHART START - No. of Transactions By Operator Daily
+       if (element.Operator == 'Salt' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-            if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+               this.lineChartTransactions[0].series.push({
+                 name: element.Date,
+                 value: Number(element.Price) * Number(element.Count)
+@@ -1116,7 +1111,8 @@
+       }
+       if (element.Operator == 'Sunrise' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-          if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+             this.lineChartTransactions[1].series.push({
+               name: element.Date,
+               value: Number(element.Price) * Number(element.Count)
+@@ -1132,7 +1128,8 @@
+       }
+       if (element.Operator == 'Swisscom' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-          if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+             this.lineChartTransactions[2].series.push({
+               name: element.Date,
+               value: Number(element.Price) * Number(element.Count)
+@@ -1148,7 +1145,8 @@
+       }
+       if (element.Operator == 'Twint' && element.Price !== '\\N') {
+         if(multiselectRange === "Date range"){
+-          if(convertDDMMYYYYtoYYYYDDMM(element.Date) >= convertDDMMYYYYtoYYYYDDMM(from) && convertDDMMYYYYtoYYYYDDMM(element.Date) <= convertDDMMYYYYtoYYYYDDMM(to)){
++          // tslint:disable-next-line: max-line-length
++          if(this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) >= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(from)) && this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(element.Date)) <= this.convertYYYYDDMMtoTimestamp(this.convertYYYYDDMMtoTimestamp(to))){
+             this.lineChartTransactions[3].series.push({
+               name: element.Date,
+               value: Number(element.Price) * Number(element.Count)
+@@ -1282,7 +1280,7 @@
+ 
+         if(multiselectRange === "Date range"){
+           let convertDDMMYYYYtoYYYYDDMM = (date) => {
+-            let tempDate = date.slice(6, 10) + ',' + date.slice(3, 5) + ',' + date.slice(0, 2);
++            let tempDate = this.DDMMYYYtoYYYYDDMMconvert(date);
+             return (new Date(tempDate)).getTime();
+           }
+ 
+@@ -1360,7 +1358,7 @@
+      });
+ 
+     let convertDDMMYYYYtoYYYYDDMMDays = (date) => {
+-      let tempDate = date.slice(6, 10) + ',' + date.slice(3, 5) + ',' + date.slice(0, 2);
++      let tempDate = this.DDMMYYYtoYYYYDDMMconvert(date);
+       return (new Date(tempDate)).getTime();
+     }
+ 
+@@ -1445,19 +1443,8 @@
+       return el.value !== 0;
+     });
+ 
+-
+-
+-    // filterDataSource(from, to, rangeSelect, multiselectRange)
+-    /*
+-    console.log(from)
+-    console.log(to)
+-    console.log(rangeSelect)
+-    console.log(multiselectRange)
+-    */
+-     // Convert YYYY-DD-MM to timestamp
+-
+     let convertDDMMYYYYtoYYYYDDMM = (date) => {
+-       let tempDate = date.slice(6, 10) + ',' + date.slice(3, 5) + ',' + date.slice(0, 2);
++       let tempDate = this.DDMMYYYtoYYYYDDMMconvert(date);
+        return (new Date(tempDate)).getTime();
+     }
+ 

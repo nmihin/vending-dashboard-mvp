@@ -1,0 +1,340 @@
+<section id="main-content" class="container-fluid home-section" *ngIf="currentUser">
+  <mat-card id="home" class="main-card">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="filter--wrapper">
+          <mat-card>
+            <div class="row">
+              <div class="main-card__filter col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <h1>{{ priceTotal | number: ".0" }}</h1>
+                <span>Total Number of Transactions {{monthSelect}}</span>
+              </div>
+              <div class="main-card__filter col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <h1>{{ priceAverage | number: ".2-2" }}</h1>
+                <span>Average Number of Transactions {{monthSelect}}</span>
+              </div>
+              <div class="main-card__filter col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <h1>{{ transactionsTotal | number: ".2-2"}}</h1>
+                <span>Total Amount Prices {{monthSelect}}</span>
+              </div>
+              <div class="main-card__filter col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <h1>{{ transactionsTotal/uniqueValuesDateObj.length | number: ".2-2" }}</h1>
+                <span>Average Amount Prices {{monthSelect}}</span>
+              </div>
+              <div class="main-card__filter col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <h1>{{transactionsTotal / priceTotal | number: ".2-2"}}</h1>
+                <span>Average Amount per Transactions {{monthSelect}}</span>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
+        <div class="filter--wrapper">
+          <mat-card>
+            <div class="forms--wrapper">
+              <mat-form-field>
+                <mat-label>Select Month(s)</mat-label>
+                <mat-select (selectionChange)="selectMonth($event)" [formControl]="monthsForm" [(value)]="selected" multiple>
+                  <ng-container *ngFor="let m of months; let i = index">
+                    <mat-option *ngIf="matOptionMonth >= i" [value]='m'>{{m}} (2020)</mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Select Range</mat-label>
+                <mat-select (selectionChange)="selectRange($event)">
+                  <ng-container *ngFor="let r of range; let i = index">
+                    <mat-option [value]='r'>{{r}}</mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+
+              <form [formGroup]="form">
+                <mat-form-field>
+                  <input matInput placeholder="Choose a date range" [satDatepicker]="picker5"
+                    (dateInput)="addEventFilterMonth('input', $event, multiselectRange)" [min]="minDate" [max]="maxDate"
+                    formControlName="date" />
+                  <sat-datepicker #picker5 [rangeMode]="true" [selectFirstDateOnClose]="true">
+                  </sat-datepicker>
+                  <sat-datepicker-toggle matSuffix [for]="picker5"></sat-datepicker-toggle>
+                </mat-form-field>
+              </form>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="col-xs-8 col-sm-8 col-md-10 col-lg-10">
+        <!--STANDARD-->
+        <div class="row">
+          <h1 class="chart-group-title">Standard Payments</h1>
+          <!--BAR CHARTS-->
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper">
+                <mat-card
+                  [ngClass]="multiselect"
+                  class="ngx-charts"
+                  *ngIf="chartsAreaChartTransactionsDay && chartsAreaChartTransactionsDay.length > 0"
+                >
+                  <h2>No. of Transactions By Day - {{monthSelect}}</h2>
+                  <ngx-charts-area-chart
+                    [scheme]="colorSchemeMonochromatic"
+                    [results]="chartsAreaChartTransactionsDay"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-area-chart>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper">
+                <mat-card
+                  [ngClass]="multiselect"
+                  class="ngx-charts"
+                  *ngIf="
+                    chartsAreaChartAmountDay && chartsAreaChartAmountDay.length > 0
+                  "
+                >
+                  <h2>Amount By Day (CHF) - {{monthSelect}}</h2>
+                  <ngx-charts-area-chart
+                    [scheme]="colorSchemeMonochromatic"
+                    [results]="chartsAreaChartAmountDay"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-area-chart>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper line-chart">
+                  <mat-card
+                  [ngClass]="multiselect"
+                  class="ngx-charts"
+                  *ngIf="
+                  chartsLineChartTransactionsOperator &&
+                  chartsLineChartTransactionsOperator.length > 0
+                  "
+                >
+                  <h2>No. of Transactions By Operator Daily - {{monthSelect}}</h2>
+                  <ngx-charts-line-chart
+                    [scheme]="colorScheme"
+                    [results]="chartsLineChartTransactionsOperator"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-line-chart>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper line-chart">
+                  <mat-card
+                  [ngClass]="multiselect"
+                  class="ngx-charts"
+                  *ngIf="
+                  chartsLineChartAmountDaily &&
+                  chartsLineChartAmountDaily.length > 0
+                  "
+                >
+                  <h2>Amount By Operator (CHF) Daily - {{monthSelect}}</h2>
+                  <ngx-charts-line-chart
+                    [scheme]="colorScheme"
+                    [results]="chartsLineChartAmountDaily"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-line-chart>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <div class="chart--wrapper">
+                    <mat-card
+                    class="ngx-charts"
+                    *ngIf="
+                    chartsBarVerticalTransactionsDay &&
+                    chartsBarVerticalTransactionsDay.length > 0
+                    "
+                  >
+                    <h2>No. of Transactions By Day of the Week - {{monthSelect}}</h2>
+                    <ngx-charts-bar-vertical
+                      [scheme]="colorScheme"
+                      [results]="chartsBarVerticalTransactionsDay"
+                      [xAxis]="true"
+                      [yAxis]="showYAxis"
+                      [legend]="showLegend"
+                      [xAxisLabel]="xAxisLabel"
+                      [yAxisLabel]="yAxisLabel"
+                    >
+                    </ngx-charts-bar-vertical>
+                  </mat-card>
+                  </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper">
+                  <mat-card
+                  class="ngx-charts"
+                  *ngIf="
+                  chartsBarVerticalAmountDay &&
+                  chartsBarVerticalAmountDay.length > 0
+                  "
+                >
+                <h2>Amount By Day of the Week (CHF) Daily - {{monthSelect}}</h2>
+                  <ngx-charts-bar-vertical
+                    [scheme]="colorScheme"
+                    [results]="chartsBarVerticalAmountDay"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-bar-vertical>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div class="chart--wrapper line-chart">
+                  <mat-card
+                  class="ngx-charts pie-chart"
+                  *ngIf="
+                  chartsPieChartPaymentMethod &&
+                  chartsPieChartPaymentMethod.length > 0
+                  "
+                >
+                  <h2>Percentage by Payment method - {{monthSelect}}</h2>
+                  <ngx-charts-pie-chart
+                    [scheme]="colorScheme"
+                    [results]="chartsPieChartPaymentMethod"
+                    [legend]="showLegend"
+                    [labels]="showLabels"
+                  >
+                  </ngx-charts-pie-chart>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                <div class="chart--wrapper line-chart">
+                  <mat-card class="ngx-charts" *ngIf="chartsBarVertical2DAmountsPaymentMethod && chartsBarVertical2DAmountsPaymentMethod.length > 0">
+                    <h2>Amounts by day,week or month by Payment method - {{monthSelect}}</h2>
+                    <ngx-charts-bar-vertical-2d
+                    [scheme]="colorScheme"
+                    [results]="chartsBarVertical2DAmountsPaymentMethod"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel">
+                  </ngx-charts-bar-vertical-2d>
+                  </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper">
+                <mat-card
+                  class="ngx-charts"
+                  *ngIf="
+                  chartsBarHorizontalOperatorTotal &&
+                    chartsBarHorizontalOperatorTotal.length > 0
+                  "
+                >
+                  <h2>No. of Transactions By Operator Total - {{monthSelect}}</h2>
+                  <ngx-charts-bar-horizontal
+                    [scheme]="colorScheme"
+                    [results]="chartsBarHorizontalOperatorTotal"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-bar-horizontal>
+                </mat-card>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="chart--wrapper">
+                  <mat-card
+                  class="ngx-charts"
+                  *ngIf="
+                  chartsBarVerticalAmountOperator &&
+                  chartsBarVerticalAmountOperator.length > 0
+                  "
+                >
+
+                  <h2>Amount By Operator Total (CHF) - {{monthSelect}}</h2>
+                  <ngx-charts-bar-vertical
+                    [scheme]="colorScheme"
+                    [results]="chartsBarVerticalAmountOperator"
+                    [xAxis]="true"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel"
+                  >
+                  </ngx-charts-bar-vertical>
+                </mat-card>
+                </div>
+              </div>
+        </div>
+        <!--VOUCHER-->
+        <div class="row">
+          <h1 class="chart-group-title">Voucher Payments</h1>
+          <!--VOUCHER CHART-->
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+              <div class="chart--wrapper">
+                  <mat-card class="ngx-charts"
+                  *ngIf="chartsBarVertical2DVoucherPayments &&
+                  chartsBarVertical2DVoucherPayments.length > 0">
+                    <h2>Voucher Payments ( SMS & Twint ) - {{monthSelect}}</h2>
+                    <ngx-charts-bar-vertical-2d
+                    [scheme]="colorSchemeVoucher"
+                    [results]="chartsBarVertical2DVoucherPayments"
+                    [xAxis]="showXAxis"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel">
+                  </ngx-charts-bar-vertical-2d>
+                  </mat-card>
+              </div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div class="chart--wrapper">
+                  <mat-card class="ngx-charts"
+                  *ngIf="chartsBarVerticalVoucherPayments &&
+                  chartsBarVerticalVoucherPayments.length > 0">
+                    <h2>Voucher Payments ( SMS vs Twint ) - {{monthSelect}}</h2>
+                    <ngx-charts-bar-vertical-stacked
+                    [scheme]="colorSchemeVoucher"
+                    [results]="chartsBarVerticalVoucherPayments"
+                    [xAxis]="showXAxis"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [xAxisLabel]="xAxisLabel"
+                    [yAxisLabel]="yAxisLabel">
+                  </ngx-charts-bar-vertical-stacked>
+                  </mat-card>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</section>
+<notifier-container></notifier-container>

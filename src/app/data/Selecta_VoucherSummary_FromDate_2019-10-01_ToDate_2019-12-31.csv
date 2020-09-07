@@ -1,0 +1,5 @@
+FromDateUtc;ToDateUtc;Merchant;Channel;TotalAmountVoucher
+10/1/2019 12:00:00 AM;1/1/2020 12:00:00 AM;Selecta;Twint;213.0500
+10/1/2019 12:00:00 AM;1/1/2020 12:00:00 AM;Selecta;Swisscom;433.4000
+10/1/2019 12:00:00 AM;1/1/2020 12:00:00 AM;Selecta;Sunrise;161.1000
+10/1/2019 12:00:00 AM;1/1/2020 12:00:00 AM;Selecta;Salt;222.1500

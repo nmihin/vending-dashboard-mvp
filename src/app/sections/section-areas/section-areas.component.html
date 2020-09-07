@@ -1,0 +1,99 @@
+<section
+  id="main-content"
+  class="areas-section"
+  *ngIf="currentUser"
+>
+  <mat-card id="areas" class="main-card">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6  main-card__map">
+        <div id="map"></div>
+      </div>
+      <div
+        class="col-xs-12 col-sm-12 col-md-6 col-lg-6 main-card__content--general"
+      >
+        <mat-card>
+          <div class="row">
+            <div (click)='filterMachineStatus(status="TOTAL")'
+              class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces total"
+            >
+              <mat-card-title>{{ mapTableData.length }}</mat-card-title>
+              <mat-card-subtitle>Total Machines</mat-card-subtitle>
+            </div>
+            <div (click)='filterMachineStatus(status="WORKING")'
+              class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces free"
+            >
+              <mat-card-title>{{ okMachines }}</mat-card-title>
+              <mat-card-subtitle>Working Machines</mat-card-subtitle>
+            </div>
+            <div (click)='filterMachineStatus(status="WARNING")'
+              class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces used"
+            >
+              <mat-card-title>{{ warningMachines }}</mat-card-title>
+              <mat-card-subtitle>Warning Machines</mat-card-subtitle>
+            </div>
+            <div (click)='filterMachineStatus(status="ERROR")'
+              class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces fail"
+            >
+              <mat-card-title>{{ errorMachines }}</mat-card-title>
+              <mat-card-subtitle>Error Machines</mat-card-subtitle>
+            </div>
+          </div>
+          <mat-form-field>
+            <input
+              matInput
+              (keyup)="applyFilter($event.target.value)"
+              placeholder="Filter machines..."
+            />
+          </mat-form-field>
+          <table mat-table [dataSource]="dataSource">
+            <!-- Position Column -->
+            <ng-container matColumnDef="City">
+              <th mat-header-cell *matHeaderCellDef>City</th>
+              <td mat-cell *matCellDef="let element">{{ element.City }}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Address">
+              <th mat-header-cell *matHeaderCellDef>Address</th>
+              <td mat-cell *matCellDef="let element">{{ element.Address }}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="ObjektNummer">
+              <th mat-header-cell *matHeaderCellDef>Objekt Nummer</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.ObjektNummer }}
+              </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="StatusCode">
+              <th mat-header-cell *matHeaderCellDef>Status Code</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="machineStatus--{{ element.StatusCode }}">{{
+                  element.StatusCode
+                }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="transaction_errorcode">
+              <th mat-header-cell *matHeaderCellDef>Transaction Error</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.transaction_errorcode }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+
+          <mat-paginator
+            [pageSizeOptions]="[10, 20, 30]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card>
+</section>

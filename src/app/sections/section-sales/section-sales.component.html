@@ -1,0 +1,46 @@
+<section id="main-content" class="container-fluid sales-section" *ngIf="currentUser">
+    <mat-card id="sales" class="main-card">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
+                <div class="filter--wrapper">
+                    <mat-card>
+                      <div class="forms--wrapper">
+                      </div>
+                    </mat-card>
+                  </div>
+            </div>
+            <div class="col-xs-8 col-sm-8 col-md-10 col-lg-10">
+              <div class="row">
+                <!--SALES-->
+                    <h1 class="chart-group-title">Sales Data</h1>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                      <mat-card class="general-card">
+                        <h2>Top Products</h2>
+                    </mat-card>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                      <mat-card class="general-card">
+                        <h2>Top 5 Vending Machines</h2>
+                      </mat-card>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <mat-card class="general-card">
+                            <h2>Sales by Vending Machines</h2>
+                        </mat-card>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <mat-card class="general-card">
+                            <h2>Sales by Products</h2>
+                            <mat-form-field>
+                                <input
+                                  matInput
+                                  placeholder="Search products..."
+                                />
+                              </mat-form-field>
+                        </mat-card>
+                    </div>
+              </div>
+            </div>
+          </div>
+    </mat-card>
+</section>
