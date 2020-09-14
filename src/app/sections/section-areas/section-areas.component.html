@@ -13,25 +13,25 @@
       >
         <mat-card>
           <div class="row">
-            <div (click)='filterMachineStatus(status="TOTAL")'
+            <div (click)='filterMachineStatus("TOTAL")'
               class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces total"
             >
               <mat-card-title>{{ mapTableData.length }}</mat-card-title>
               <mat-card-subtitle>Total Machines</mat-card-subtitle>
             </div>
-            <div (click)='filterMachineStatus(status="WORKING")'
+            <div (click)='filterMachineStatus("WORKING")'
               class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces free"
             >
               <mat-card-title>{{ okMachines }}</mat-card-title>
               <mat-card-subtitle>Working Machines</mat-card-subtitle>
             </div>
-            <div (click)='filterMachineStatus(status="WARNING")'
+            <div (click)='filterMachineStatus("WARNING")'
               class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces used"
             >
               <mat-card-title>{{ warningMachines }}</mat-card-title>
               <mat-card-subtitle>Warning Machines</mat-card-subtitle>
             </div>
-            <div (click)='filterMachineStatus(status="ERROR")'
+            <div (click)='filterMachineStatus("ERROR")'
               class="col-xs-2 col-sm-2 col-md-2 col-lg-2 mat-tab__spaces fail"
             >
               <mat-card-title>{{ errorMachines }}</mat-card-title>

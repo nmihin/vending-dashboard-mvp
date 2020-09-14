@@ -54,6 +54,7 @@ export class SectionAreasComponent implements OnInit {
   public _parkingSpacesAreas = [];
   public _summary = [];
   public _alarms = [];
+  public tableData = [];
   public mapTableData = [];
   public mapTableDataClusterOK = [];
   public mapTableDataClusterWARNING = [];
@@ -217,12 +218,12 @@ export class SectionAreasComponent implements OnInit {
   filterMachineStatus(filter) {
 
     if(filter!=="TOTAL"){
-      this.tempArray = this.mapTableData.filter(function (machine) {
+      this.tempArray = this.tableData.filter(function (machine) {
         return machine.StatusCode === filter;
       });
     }
     else{
-      this.tempArray = this.mapTableData;
+      this.tempArray = this.tableData;
     }
 
     let ELEMENT_DATA: MachinesData[] = this.tempArray;
@@ -373,6 +374,13 @@ export class SectionAreasComponent implements OnInit {
         purchase_status: element.purchase_status,
         StatusCode: setStatusCode(element.Ping, element.end_timestamp)
       });
+      this.tableData.push({
+        City: element.City,
+        Address: element.Address,
+        ObjektNummer: element.ObjektNummer,
+        transaction_errorcode: element.transaction_errorcode,
+        StatusCode: setStatusCode(element.Ping, element.end_timestamp)
+      })
     });
 
     // INIT MAP LAYERS
@@ -385,9 +393,12 @@ export class SectionAreasComponent implements OnInit {
       if (element.StatusCode === "ERROR") this.errorMachines++;
     });
 
-    let ELEMENT_DATA: MachinesData[] = this.mapTableData;
+    //const noLatLon = ({ type, Latitude, Longitude, start_timestamp, end_timestamp, purchase_status, ...rest }) => rest
+
+    let ELEMENT_DATA: MachinesData[] = this.tableData;
     this.dataSource = new MatTableDataSource<MachinesData>(ELEMENT_DATA);
 
+    //machinesData: any[];
     // Mobile detector - frontend UI only
     this.isMobile = this.getIsMobile();
     window.onresize = () => {

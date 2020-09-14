@@ -1846,6 +1846,7 @@ export class SectionHomeComponent implements OnInit {
         localStorage.setItem('vendingDataMonths', JSON.stringify(csvArrVending));
     }
 
+
     // SMS DATA
     const HttpSMS = new XMLHttpRequest();
     const urlSMS = "http://smarpaysrv-test.azurewebsites.net/VendingDashboard/data/voucher_sms_2020.csv";
